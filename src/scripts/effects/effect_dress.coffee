@@ -6,19 +6,31 @@ class Edge
     @geometry = new THREE.Geometry()
     @geometry.vertices = []
     for i in [0...Edge::maxLength]
-      @geometry.vertices.push new THREE.Vector3 0,0,0
+      v = new THREE.Vector3 0,0,0
+      v.velocity = new THREE.Vector3
+      @geometry.vertices.push v
     @material = new THREE.LineBasicMaterial(color: 0x222222, linewidth:3, linecap:'round')
     @view = new THREE.Line @geometry, @material
 
   update : (dt) ->
+
     verts = @geometry.vertices
+
+    # fact = 0.2
+    # for v in verts
+    #   v.x += v.velocity.x * fact
+    #   v.y += v.velocity.y * fact
+    #   v.z += v.velocity.z * fact
+
     v = verts.shift()
     v.x = @joint.x
     v.y = @joint.y
     v.z = @joint.z
+    v.velocity = @joint.velocity.clone()
     verts.push v
     
     @geometry.verticesNeedUpdate = true
+
 
 
 class Ribbon
@@ -30,7 +42,9 @@ class Ribbon
     numJts = @jts.length
     for i in [0...Ribbon::maxLength]
       for j in @jts
-        @geometry.vertices.push new THREE.Vector3 j.x, j.y, j.z
+        v = new THREE.Vector3 0,0,0
+        v.velocity = new THREE.Vector3 j.x, j.y, j.z
+        @geometry.vertices.push v
     for i in [0...Ribbon::maxLength-1]
       for j in [0...numJts-1]
         @geometry.faces.push new THREE.Face3 i*numJts+j   , i*numJts+j+numJts, i*numJts+j+1        
@@ -49,16 +63,20 @@ class Ribbon
 
     verts = @geometry.vertices
     numJts = @jts.length
-    for i in [Ribbon::maxLength-1..1]
-      for j in [0...numJts]
-        verts[i*numJts+j].x = verts[(i-1)*numJts+j].x
-        verts[i*numJts+j].y = verts[(i-1)*numJts+j].y
-        verts[i*numJts+j].z = verts[(i-1)*numJts+j].z
 
+    # fact = 0.2
+    # for v in verts
+    #   v.x += v.velocity.x * fact
+    #   v.y += v.velocity.y * fact
+    #   v.z += v.velocity.z * fact
+
+    v = verts.splice 0, numJts
     for i in [0...numJts]
-      verts[i].x = @jts[i].x
-      verts[i].y = @jts[i].y
-      verts[i].z = @jts[i].z
+      v[i].x = @jts[i].x
+      v[i].y = @jts[i].y
+      v[i].z = @jts[i].z
+      v[i].velocity = @jts[i].velocity.clone()
+      verts.push v[i]
 
     @geometry.verticesNeedUpdate = true
     @geometry.normalsNeedUpdate = true
@@ -66,7 +84,6 @@ class Ribbon
     @geometry.computeVertexNormals true
 
     
-
 
 class TestEffectDress
 
@@ -97,12 +114,10 @@ class TestEffectDress
 
     light1 = new THREE.PointLight( 0xffffff, 0.7, 5 )
     light1.position.set 0,0.75,-0.5
-    # light1.add new THREE.Mesh( sphere, mat )
     @scene.add light1
 
     light2 = new THREE.PointLight( 0xffffff, 0.7, 5 )
     light2.position.set 0,0.75,2
-    # light2.add new THREE.Mesh( sphere, mat )
     @scene.add light2
 
   setupRibbons : ->
@@ -113,11 +128,25 @@ class TestEffectDress
         ks.JointType.LEFT_WRIST
         ks.JointType.LEFT_ELBOW
         ks.JointType.LEFT_SHOULDER
-      ], [
+      ]
+      [
         ks.JointType.RIGHT_SHOULDER
         ks.JointType.RIGHT_ELBOW
         ks.JointType.RIGHT_WRIST
       ]
+      # [
+      #   ks.JointType.SPINE_SHOULDER
+      #   ks.JointType.SPINE_MID
+      #   ks.JointType.SPINE_BASE
+      # ]
+      # [
+      #   ks.JointType.LEFT_HIP
+      #   ks.JointType.LEFT_KNEE
+      # ]
+      # [
+      #   ks.JointType.RIGHT_HIP
+      #   ks.JointType.RIGHT_KNEE
+      # ]
     ]
 
     for j in list

@@ -8,8 +8,12 @@ class Joint
     @x = 0
     @y = 0
     @z = 0
+    @velocity = new THREE.Vector3()
 
   set : (@x, @y, @z) ->
+    @velocity.x = @x - @view.position.x
+    @velocity.y = @y - @view.position.y
+    @velocity.z = @z - @view.position.z
     @view.position.x = @x
     @view.position.y = @y
     @view.position.z = @z
@@ -38,7 +42,7 @@ class Bone
 
 
 
-class Skeleton
+class Body
 
   constructor : (debug) ->
     @scene = new THREE.Scene()
@@ -97,4 +101,4 @@ class Skeleton
 
       bone.update() for bone in @bones
 
-module.exports = Skeleton
+module.exports = Body

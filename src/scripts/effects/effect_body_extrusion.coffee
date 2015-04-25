@@ -1,6 +1,6 @@
 class Ribbon
   
-  maxLength : 120
+  maxLength : 140
 
   constructor : (@jts) ->
     @geometry = new THREE.Geometry()
@@ -51,7 +51,7 @@ class BodyExtrusion
   constructor : (@body, @scene) ->
     @view = new THREE.Object3D
     @lines = []
-    @setupTestSphere()
+    # @setupTestSphere()
     @setupLights()
     @setupGround()
     @setupRibbons()

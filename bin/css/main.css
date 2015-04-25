@@ -18,8 +18,16 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+html.light,
+body.light {
   background-color: #fff;
   color: #000;
+}
+html.dark,
+body.dark {
+  background-color: #000;
+  color: #fff;
 }
 ul.gui {
   font-size: 0.8em;

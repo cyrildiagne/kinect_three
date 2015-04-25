@@ -1,4 +1,4 @@
-Skeleton = require './body'
+Body = require './body'
 # Playback = require './playback'
 
 fx = {}
@@ -39,6 +39,7 @@ class App
 		document.body.appendChild @renderer.domElement
 
 		window.setDarkTheme = =>
+			$('body').removeClass('light').addClass('dark')
 			@renderer.setClearColor 0x222222, 1
 
 
@@ -62,7 +63,7 @@ class App
 		@ksview.canvas.style.right = '0'
 		@ksview.canvas.style.bottom = '-30px'
 
-		@skeleton = new Skeleton()
+		@body = new Body()
 
 	setupUI : ->
 		$('#debug').change (ev) =>
@@ -100,7 +101,7 @@ class App
 	update : (dt) ->
 		delta = 1000 / 60
 		@ksview.render() if @bDrawDebugView
-		@skeleton.update()
+		@body.update()
 		@effect.update dt if @effect
 
 	render : ->
@@ -108,13 +109,13 @@ class App
 		@renderer.render @scene, @camera
 		if @debug
 			# @renderer.clearDepth()
-			@renderer.render @skeleton.scene, @camera
+			@renderer.render @body.scene, @camera
 
 # Kinect Events
 
 	onKinectUserIn : (ev) =>
 		return if @tracker.bodies.length != 1
-		@skeleton.setBody ev.body
+		@body.setBody ev.body
 		if @effect
 			@setEffect @effect.constructor.name
 
@@ -126,7 +127,7 @@ class App
 
 	setDebugMode : (@debug=false) ->
 		@grid.visible = @debug
-		@skeleton.view.visible = @debug
+		@body.view.visible = @debug
 		@effect.setDebugMode @debug if @effect
 
 	setEffect : (effectName) ->
@@ -135,7 +136,7 @@ class App
 			@scene.remove @effect.view
 		EffectClass = fx[effectName]
 		if EffectClass
-			@effect = new EffectClass @skeleton, @scene
+			@effect = new EffectClass @body, @scene
 			@scene.add @effect.view
 
 	setPlaybackFile : (fileName) ->

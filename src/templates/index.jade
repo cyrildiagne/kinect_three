@@ -1,0 +1,42 @@
+doctype html
+html(lang="en")
+
+	head
+
+			meta(charset='UTF-8')
+			title Dress
+			link(rel='stylesheet', href='css/main.css')
+
+		body
+
+			ul.gui
+				li
+					input#debug(type='checkbox', checked='checked')
+					label(for='debug') show debug
+				li
+					label(for='file') playback file :
+					select#file
+						option dance
+						option dance_simple
+						option hand_flap
+						option jump_crouch
+						option(selected) naenae
+				li
+					label(for='effect') effect :
+					select#effect
+						option None
+						option TestEffectLines
+						option TestEffectPhysics
+						option(selected) TestEffectDress
+						option BodyExtrusion
+			
+			//- each lib in	libs
+			//- 	script(src='#{lib}')
+
+			script(src='js/libs/jquery-2.1.1.min.js')
+			script(src='js/libs/three.min.js')
+			script(src='js/libs/kinect2-socket.min.js')
+			script(src='js/libs/orbitcontrols.js')
+			script(src='js/libs/cannon.min.js')
+
+			script(src='js/main.js')

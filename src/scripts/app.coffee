@@ -11,12 +11,12 @@ fx.InertiaLines      = require './effects/effect_inertia_lines'
 class App
 
 	constructor : ->
+		@debug = false
+		@isPaused = false
 		@setupThreejs()
 		@setupSkeleton()
 		@setupUI()
 		@setupDefaults()
-		@isPaused = false
-		@bDrawDebugView = false
 		window.addEventListener 'focus', (=> @start()), false
 		window.addEventListener 'blur', (=> @stop()), false
 		window.addEventListener 'resize', (=> @windowResized()), false
@@ -69,6 +69,7 @@ class App
 	setupUI : ->
 		$('#pause').change (ev) =>
 			@isPaused = ev.target.checked
+			@kinectProxy.togglePlay()
 		$('#debug').change (ev) =>
 			debug = ev.target.checked
 			@setDebugMode debug
@@ -82,7 +83,7 @@ class App
 	setupDefaults : ->
 		effectName = $('#effect').find('option:selected').val()
 		@setEffect effectName
-		debug = $('#debug').attr('checked')
+		debug = $('#debug')[0].checked
 		@setDebugMode debug
 		fileName = $('#file').find('option:selected').val()
 		@setPlaybackFile fileName
@@ -103,7 +104,7 @@ class App
 
 	update : (dt) ->
 		delta = 1000 / 60
-		@ksview.render() if @bDrawDebugView
+		@ksview.render() if @debug
 		if !@isPaused
 			@body.update()
 			@effect.update dt if @effect
@@ -129,8 +130,14 @@ class App
 
 # Controls
 
-	setDebugMode : (@debug=false) ->
-		# @grid.visible = @debug
+	setDebugMode : (@debug) ->
+		$lis = $('.gui li:not(.always_visible)')
+		if @debug 
+			$(@ksview.canvas).appendTo($('body'))
+			$lis.show()
+		else
+			$(@ksview.canvas).remove()
+			$lis.hide()
 		@body.view.visible = @debug
 		@effect.setDebugMode @debug if @effect
 
@@ -159,10 +166,6 @@ class App
 	onKeyDown : (event) =>
 		if event.keyCode == 9
 			event.preventDefault()
-			@bDrawDebugView = !@bDrawDebugView
-			if @bDrawDebugView
-				document.body.appendChild @ksview.canvas
-			else
-				document.body.removeChild @ksview.canvas
+			$('#debug').click()
 
 module.exports = App

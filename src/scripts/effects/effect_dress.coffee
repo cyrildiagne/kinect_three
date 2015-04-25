@@ -97,7 +97,7 @@ class TestEffectDress
     @setupRibbons()
 
   setupTestSphere : ->
-    material = new THREE.MeshPhongMaterial( { color: 0x555555, specular: 0xffffff, shininess: 50 }  ) 
+    material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 50 }  ) 
     radius = 0.1
     geometry = new THREE.SphereGeometry radius, 10,10
     mesh = new THREE.Mesh geometry, material
@@ -106,19 +106,19 @@ class TestEffectDress
 
   setupLights : ->
 
-    ambient = new THREE.AmbientLight 0x9a9a9a
-    @scene.add ambient
+    @ambient = new THREE.AmbientLight 0xffffff
+    @view.add @ambient
 
     sphere = new THREE.SphereGeometry( 0.05, 16, 8 )
     mat = new THREE.MeshBasicMaterial( { color: 0xff0040 } )
 
     light1 = new THREE.PointLight( 0xffffff, 0.7, 5 )
     light1.position.set 0,0.75,-0.5
-    @scene.add light1
+    @view.add light1
 
     light2 = new THREE.PointLight( 0xffffff, 0.7, 5 )
     light2.position.set 0,0.75,2
-    @scene.add light2
+    @view.add light2
 
   setupRibbons : ->
     return if !@body.joints.length
@@ -165,7 +165,8 @@ class TestEffectDress
       @edges.push e
 
   stop : ->
-    # ...
+    # console.log 'stop'
+    # @scene.remove @ambient
 
   setDebugMode : (debug) ->
     # ...

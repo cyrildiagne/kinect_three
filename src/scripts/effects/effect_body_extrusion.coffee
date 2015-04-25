@@ -48,7 +48,7 @@ class Ribbon
 
 class BodyExtrusion
 
-  constructor : (@body, @scene) ->
+  constructor : (@body) ->
     @view = new THREE.Object3D
     @lines = []
     # @setupTestSphere()
@@ -62,7 +62,7 @@ class BodyExtrusion
     ground = new THREE.Mesh geometry, material 
     ground.position.set 0, -0.86, 0 
     ground.rotation.x = -Math.PI/2
-    @scene.add ground 
+    @view.add ground 
     ground.receiveShadow = true
 
   setupTestSphere : ->
@@ -76,11 +76,11 @@ class BodyExtrusion
   setupLights : ->
     # ambient = new THREE.AmbientLight 0x222222
     ambient = new THREE.AmbientLight 0x6a6a6a
-    @scene.add ambient
+    @view.add ambient
 
     light = new THREE.DirectionalLight 0xebf3ff, 1.6
     light.position.set(0, 500, 500).multiplyScalar 1.1
-    @scene.add light
+    @view.add light
 
     light.castShadow = true
 

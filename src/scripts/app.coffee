@@ -65,28 +65,30 @@ class App
 		@ksview.canvas.style.bottom = '-30px'
 
 		@body = new Body()
+		@scene.add @body.view
 
 	setupUI : ->
 		$('#pause').change (ev) =>
 			@isPaused = ev.target.checked
 			@kinectProxy.togglePlay()
 		$('#debug').change (ev) =>
-			debug = ev.target.checked
-			@setDebugMode debug
+			@setDebugMode ev.target.checked
 		$('#file').change (ev) =>
 			fileName = $('#file').find('option:selected').val()
 			@setPlaybackFile fileName
 		$('#effect').change (ev) =>
 			effectName = $('#effect').find('option:selected').val()
 			@setEffect effectName
+		$('#ksvisible').change (ev) =>
+			@setKSViewVisible ev.target.checked
 
 	setupDefaults : ->
 		effectName = $('#effect').find('option:selected').val()
 		@setEffect effectName
-		debug = $('#debug')[0].checked
-		@setDebugMode debug
+		@setDebugMode $('#debug')[0].checked
 		fileName = $('#file').find('option:selected').val()
 		@setPlaybackFile fileName
+		@setKSViewVisible $('#ksvisible')[0].checked
 
 	start : ->
 		@animate() if !@animFrameId
@@ -112,9 +114,9 @@ class App
 	render : ->
 		@renderer.clear()
 		@renderer.render @scene, @camera
-		if @debug
+		# if @debug
 			# @renderer.clearDepth()
-			@renderer.render @body.scene, @camera
+		# @renderer.render @body.scene, @camera
 
 # Kinect Events
 
@@ -140,6 +142,12 @@ class App
 			$lis.hide()
 		@body.view.visible = @debug
 		@effect.setDebugMode @debug if @effect
+
+	setKSViewVisible : (bVisible) ->
+		if bVisible
+			$(@ksview.canvas).show()
+		else
+			$(@ksview.canvas).hide()
 
 	setEffect : (effectName) ->
 		if @effect

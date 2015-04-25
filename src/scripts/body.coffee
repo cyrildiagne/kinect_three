@@ -45,9 +45,9 @@ class Bone
 class Body
 
   constructor : (debug) ->
-    @scene = new THREE.Scene()
+    # @scene = new THREE.Scene()
     @view = new THREE.Object3D()
-    @scene.add @view
+    # @scene.add @view
     @bones = []
     @joints = []
 

@@ -224,7 +224,7 @@ class TestEffectPhysics
     @world.add groundBody
 
   addJoints : ->
-    color = new THREE.Color 0,0.7,1
+    color = new THREE.Color 1,1,1
     PJoint::material = createShaderMaterial "celshader", @light
     PJoint::material.uniforms.uMaterialColor.value.copy color
 
@@ -243,7 +243,7 @@ class TestEffectPhysics
 
   addBones : ->
     # PBone::material = new THREE.MeshLambertMaterial color:0x0000ff
-    color = new THREE.Color 0,0.7,1
+    color = new THREE.Color 1,1,1
     PBone::material = createShaderMaterial "celshader", @light
     PBone::material.uniforms.uMaterialColor.value.copy color
 
@@ -255,15 +255,15 @@ class TestEffectPhysics
       @bones.push pb
 
   addBalls : ->
-    color = new THREE.Color
-    color.setHSL 0.8+Math.random()*0.1, 0.7, 0.5
+    color = new THREE.Color 0, 0, 1
+    # color.setHSL 0.8+Math.random()*0.1, 0.7, 0.5
     PBall::material = createShaderMaterial "celshader", @light
     PBall::material.uniforms.uMaterialColor.value.copy color
     PBall::geometry = new THREE.SphereGeometry PBall::radius, 10,10
 
     for b,i in @bones
-      num = 5
-      num = 15 if b.bone.name in ['leftUpperLeg', 'rightUpperLeg', 'leftLowerArm', 'rightLowerArm']
+      num = 8
+      num = 13 if b.bone.name in ['leftUpperLeg', 'rightUpperLeg', 'leftLowerArm', 'rightLowerArm']
       for i in [0...num]
         @addBall b.bone
 

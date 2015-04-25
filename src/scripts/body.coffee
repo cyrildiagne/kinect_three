@@ -11,9 +11,9 @@ class Joint
     @velocity = new THREE.Vector3()
 
   set : (@x, @y, @z) ->
-    @velocity.x = @x - @view.position.x
-    @velocity.y = @y - @view.position.y
-    @velocity.z = @z - @view.position.z
+    @velocity.x += (@x - @view.position.x - @velocity.x) * 0.05
+    @velocity.y += (@y - @view.position.y - @velocity.y) * 0.05
+    @velocity.z += (@z - @view.position.z - @velocity.z) * 0.05
     @view.position.x = @x
     @view.position.y = @y
     @view.position.z = @z
@@ -96,7 +96,7 @@ class Body
       p = jnt.view.position
       x = p.x + (  jnt.joint.x*1.000-p.x) * speed
       y = p.y + ( -jnt.joint.y*1.000-p.y) * speed
-      z = p.z + ( -1.5+jnt.joint.z*1.000-p.z) * speed
+      z = p.z + ( -1.6+jnt.joint.z*1.000-p.z) * speed
       jnt.set x,y,z
 
       bone.update() for bone in @bones

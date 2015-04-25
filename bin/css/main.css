@@ -35,9 +35,14 @@ ul.gui {
   z-index: 2;
   top: 0;
   left: 0;
-  padding-left: 2em;
+  padding-left: 1em;
 }
 ul.gui li {
   display: inline-block;
-  margin-right: 3em;
+  margin-right: 0.5em;
+  margin-bottom: 0.75em;
+  background-color: rgba(240,240,240,0.5);
+  padding: 0.5em;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
 }

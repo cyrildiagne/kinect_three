@@ -1,6 +1,6 @@
 class Edge
   
-  maxLength : 100
+  maxLength : 105
 
   constructor : (@joint) ->
     @geometry = new THREE.Geometry()
@@ -16,11 +16,11 @@ class Edge
 
     verts = @geometry.vertices
 
-    # fact = 0.2
-    # for v in verts
-    #   v.x += v.velocity.x * fact
-    #   v.y += v.velocity.y * fact
-    #   v.z += v.velocity.z * fact
+    fact = 0.03
+    for v in verts
+      v.x += v.velocity.x * fact
+      v.y += v.velocity.y * fact
+      v.z += v.velocity.z * fact
 
     v = verts.shift()
     v.x = @joint.x
@@ -64,11 +64,11 @@ class Ribbon
     verts = @geometry.vertices
     numJts = @jts.length
 
-    # fact = 0.2
-    # for v in verts
-    #   v.x += v.velocity.x * fact
-    #   v.y += v.velocity.y * fact
-    #   v.z += v.velocity.z * fact
+    fact = 0.025
+    for v in verts
+      v.x += v.velocity.x * fact
+      v.y += v.velocity.y * fact
+      v.z += v.velocity.z * fact
 
     v = verts.splice 0, numJts
     for i in [0...numJts]

@@ -6,6 +6,7 @@ fx.TestEffectDress   = require './effects/effect_dress'
 fx.TestEffectLines   = require './effects/effect_lines'
 fx.TestEffectPhysics = require './effects/effect_physics'
 fx.BodyExtrusion     = require './effects/effect_body_extrusion'
+fx.InertiaLines      = require './effects/effect_inertia_lines'
 
 class App
 
@@ -14,6 +15,7 @@ class App
 		@setupSkeleton()
 		@setupUI()
 		@setupDefaults()
+		@isPaused = false
 		@bDrawDebugView = false
 		window.addEventListener 'focus', (=> @start()), false
 		window.addEventListener 'blur', (=> @stop()), false
@@ -42,7 +44,6 @@ class App
 			$('body').removeClass('light').addClass('dark')
 			@renderer.setClearColor 0x222222, 1
 
-
 		@controls = new THREE.OrbitControls @camera, @renderer.domElement
 
 		@grid = new THREE.GridHelper 3, 0.25
@@ -66,6 +67,8 @@ class App
 		@body = new Body()
 
 	setupUI : ->
+		$('#pause').change (ev) =>
+			@isPaused = ev.target.checked
 		$('#debug').change (ev) =>
 			debug = ev.target.checked
 			@setDebugMode debug
@@ -101,8 +104,9 @@ class App
 	update : (dt) ->
 		delta = 1000 / 60
 		@ksview.render() if @bDrawDebugView
-		@body.update()
-		@effect.update dt if @effect
+		if !@isPaused
+			@body.update()
+			@effect.update dt if @effect
 
 	render : ->
 		@renderer.clear()
@@ -126,7 +130,7 @@ class App
 # Controls
 
 	setDebugMode : (@debug=false) ->
-		@grid.visible = @debug
+		# @grid.visible = @debug
 		@body.view.visible = @debug
 		@effect.setDebugMode @debug if @effect
 

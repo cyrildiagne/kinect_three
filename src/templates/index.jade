@@ -12,9 +12,12 @@ html(lang="en")
       ul.gui
         li
           input#debug(type='checkbox', checked='checked')
-          label(for='debug') show debug
+          label(for='debug') debug
         li
-          label(for='file') playback file :
+          input#pause(type='checkbox')
+          label(for='pause') pause
+        li
+          label(for='file') playback
           select#file
             option dance
             option dance_simple
@@ -22,13 +25,14 @@ html(lang="en")
             option(selected) jump_crouch
             option naenae
         li
-          label(for='effect') effect :
+          label(for='effect') effect
           select#effect
             option None
             option TestEffectLines
             option TestEffectPhysics
-            option(selected) TestEffectDress
-            option BodyExtrusion
+            option TestEffectDress
+            option(selected) BodyExtrusion
+            option InertiaLines
       
       //- each lib in libs
       //-   script(src='#{lib}')

@@ -11,15 +11,6 @@ window.getParam = (sParam) ->
       if sParameterName[0] == sParam
           return sParameterName[1]
 
-(->
-  ua = navigator.userAgent.toLowerCase()
-  if ua.indexOf('firefox') > -1
-    window.isFirefox = true
-  if ua.indexOf("iphone") > -1 or (ua.indexOf("android") > -1 and ua.indexOf("mobile") > -1)
-    window.isMobile = true
-    document.write "<meta name=\"viewport\" content=\"initial-scale=1.0,maximum-scale=1.0,user-scalable=no\"" + " />"
-)()
-
 window.onload = ->
   App    = require './app'
   app = new App

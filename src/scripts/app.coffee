@@ -13,10 +13,13 @@ class App
 	constructor : ->
 		@debug = false
 		@isPaused = false
+		@container = $('#container')[0]
+
 		@setupThreejs()
 		@setupSkeleton()
 		@setupUI()
 		@setupDefaults()
+		
 		window.addEventListener 'focus', (=> @start()), false
 		window.addEventListener 'blur', (=> @stop()), false
 		window.addEventListener 'resize', (=> @windowResized()), false
@@ -27,18 +30,18 @@ class App
 		@camera = new THREE.PerspectiveCamera 60, window.innerWidth / window.innerHeight, 0.001, 500
 		@camera.position.z = -2
 		
-		if window.WebGLRenderingContext
-			@renderer = new THREE.WebGLRenderer antialias:true
-		else
-			@renderer = new THREE.CanvasRenderer()
+		# if window.WebGLRenderingContext
+		@renderer = new THREE.WebGLRenderer antialias:true
+		# else
+		# 	@renderer = new THREE.CanvasRenderer
 		# @renderer.setClearColor 0x444444, 1
 		@renderer.setClearColor 0xffffff, 1
 		@renderer.setSize window.innerWidth, window.innerHeight
-		@renderer.autoClear = false
+		# @renderer.autoClear = false
 		# @renderer.gammaInput = true;
 		# @renderer.gammaOutput = true
 		# @renderer.shadowMapEnabled = true
-		document.body.appendChild @renderer.domElement
+		@container.appendChild @renderer.domElement
 
 		window.setDarkTheme = =>
 			$('body').removeClass('light').addClass('dark')
@@ -112,7 +115,7 @@ class App
 			@effect.update dt if @effect
 
 	render : ->
-		@renderer.clear()
+		# @renderer.clear()
 		@renderer.render @scene, @camera
 		# if @debug
 			# @renderer.clearDepth()

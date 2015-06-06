@@ -90,7 +90,7 @@ class Body
       str += "#{i/3} - #{@data[i]} - #{@data[i+1]}" + '\n'
     return str
 
-  update : (speed=0.1) ->
+  update : (speed=0.5) ->
     # console.log @joints[0].joint.x
     for jnt in @joints
       p = jnt.view.position

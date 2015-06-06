@@ -16,7 +16,7 @@ class Edge
 
     verts = @geometry.vertices
 
-    fact = 0.03
+    fact = 0.025
     for v in verts
       v.x += v.velocity.x * fact
       v.y += v.velocity.y * fact
@@ -139,14 +139,16 @@ class TestEffectDress
       #   ks.JointType.SPINE_MID
       #   ks.JointType.SPINE_BASE
       # ]
-      # [
-      #   ks.JointType.LEFT_HIP
-      #   ks.JointType.LEFT_KNEE
-      # ]
-      # [
-      #   ks.JointType.RIGHT_HIP
-      #   ks.JointType.RIGHT_KNEE
-      # ]
+      [
+        ks.JointType.LEFT_HIP
+        ks.JointType.LEFT_KNEE
+        ks.JointType.LEFT_ANKLE
+      ]
+      [
+        ks.JointType.RIGHT_HIP
+        ks.JointType.RIGHT_KNEE
+        ks.JointType.RIGHT_ANKLE
+      ]
     ]
 
     for j in list

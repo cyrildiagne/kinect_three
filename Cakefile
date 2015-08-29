@@ -88,12 +88,12 @@ log_done = -> console.log green + 'done.' + reset
 # -- TASKS --
 
 task 'dev', 'start dev env', ->
+  launch 'http-server', [bin_path, '-s']
   launch 'stylus', ['-u', 'nib', '-w', styl_path, '-o', css_out_path]
   watch jade_path, render
   watch coff_path, -> compile link
   compile link
   render path.join(jade_path, 'index.jade')
-  launch 'http-server', [bin_path, '-s']
 
 task 'clean', 'clean builds', ->
   fs.removeSync build_path

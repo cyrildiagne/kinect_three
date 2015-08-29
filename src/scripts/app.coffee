@@ -45,7 +45,7 @@ class App
 
 		window.setDarkTheme = =>
 			$('body').removeClass('light').addClass('dark')
-			@renderer.setClearColor 0x222222, 1
+			@renderer.setClearColor 0x555555, 1
 
 		@controls = new THREE.OrbitControls @camera, @renderer.domElement
 
@@ -59,7 +59,8 @@ class App
 		@tracker.addListener 'user_in',  @onKinectUserIn
 		@tracker.addListener 'user_out', @onKinectUserOut
 
-		@kinectProxy = new ks.Playback @tracker
+		#@kinectProxy = new ks.Playback @tracker
+		@kinectProxy = new ks.SocketStream @tracker
 
 		@ksview = new ks.DebugView @tracker
 		@ksview.proxy = @kinectProxy
@@ -162,9 +163,12 @@ class App
 			@scene.add @effect.view
 
 	setPlaybackFile : (fileName) ->
-			# @kinectProxy.framerate = 15
+		# @kinectProxy.framerate = 15
+		if @kinectProxy.connect
+			@kinectProxy.connect "ws://127.0.0.1:9092"
+		else
 			@kinectProxy.play 'assets/kinect/' + fileName + '.json.gz'
-		# @kinectProxy.connect "ws://192.168.0.40:9092"
+		
 
 # System Events
 

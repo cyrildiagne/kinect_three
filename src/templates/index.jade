@@ -4,7 +4,7 @@ html(lang="en")
   head
 
       meta(charset='UTF-8')
-      title Kinect2+ThreeJS Experiments
+      title Karen Topacio - Drape
       link(rel='stylesheet', href='css/main.css')
       meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
 
@@ -20,6 +20,9 @@ html(lang="en")
           input#pause(type='checkbox')
           label(for='pause') pause
         li
+          input#loopback(type='checkbox')
+          label(for='loopback') loopback
+        li
           label(for='file') playback
           select#file
             option ws://127.0.0.1:9092
@@ -30,12 +33,12 @@ html(lang="en")
             option jump_crouch
             option naenae
         li
-          label(for='effect') effect
+          label(for='effect') dress
           select#effect
             option None
             option TestEffectLines
             option TestEffectPhysics
-            option(selected) TestEffectDress
+            option(selected) Dress1
             option BodyExtrusion
             option InertiaLines
         li

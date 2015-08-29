@@ -1,5 +1,4 @@
 class Joint
-
   geometry : new THREE.SphereGeometry 0.008
   material : new THREE.MeshBasicMaterial color: 0x0
 
@@ -18,10 +17,9 @@ class Joint
     @view.position.y = @y
     @view.position.z = @z
 
-
+# BONE
 
 class Bone
-
   material : new THREE.LineBasicMaterial(color: 0x0, linewidth:3)
 
   constructor : (@name, @j1, @j2) ->
@@ -40,16 +38,17 @@ class Bone
     v2.z = @j2.z
     @geometry.verticesNeedUpdate = true
 
-
+# BODY
 
 class Body
-
   constructor : (debug) ->
-    # @scene = new THREE.Scene()
     @view = new THREE.Object3D()
-    # @scene.add @view
     @bones = []
     @joints = []
+    @history = []
+    @historyPos = 0
+    @historyMaxLength = 60 * 5
+    @isLoopingBack = false
 
   setBody : (@body) ->
     @setupJoints()
@@ -66,7 +65,6 @@ class Body
         @joints.push jv
     return
 
-
   setupBones : () ->
     if @bones.length
       i = 0
@@ -75,30 +73,46 @@ class Body
         @bones[i].j2 = @joints[bone[1]]
         i++
     else
+      hidden = [
+        'RIGHT_SHOULDER'
+        'LEFT_SHOULDER'
+        'NECK'
+        'LEFT_HIP'
+        'RIGHT_HIP'
+        'LEFT_THUMB'
+        'RIGHT_THUMB'
+      ]
       for k,bone of ks.BoneType
+        continue if k in hidden
         b = new Bone k, @joints[bone[0]], @joints[bone[1]]
         @view.add b.view
         @bones.push b
     return
 
-  setData : (@data) ->
-    # ...
-
-  toString : () ->
-    str = ""
-    for i in [0...@data.length] by 3
-      str += "#{i/3} - #{@data[i]} - #{@data[i+1]}" + '\n'
-    return str
-
   update : (speed=0.5) ->
-    # console.log @joints[0].joint.x
-    for jnt in @joints
-      p = jnt.view.position
-      x = p.x + (  jnt.joint.x*1.000-p.x) * speed
-      y = p.y + ( -jnt.joint.y*1.000-p.y) * speed
-      z = p.z + ( -1.6+jnt.joint.z*1.000-p.z) * speed
-      jnt.set x,y,z
-
-      bone.update() for bone in @bones
+    if @isLoopingBack
+      if ++@historyPos > @history.length-1
+        @historyPos = 0
+      curr = @history[@historyPos]
+      for jnt in @joints
+        p = jnt.view.position
+        hjnt = curr[jnt.id]
+        x = p.x + (  hjnt.x-p.x) * speed
+        y = p.y + ( -hjnt.y-p.y) * speed
+        z = p.z + ( -1.6+hjnt.z-p.z) * speed
+        jnt.set x,y,z
+    else
+      record = {}
+      for jnt in @joints
+        p = jnt.view.position
+        record[jnt.id] = {x:jnt.joint.x, y:jnt.joint.y, z:jnt.joint.z}
+        x = p.x + (  jnt.joint.x-p.x) * speed
+        y = p.y + ( -jnt.joint.y-p.y) * speed
+        z = p.z + ( -1.6+jnt.joint.z-p.z) * speed
+        jnt.set x,y,z
+      @history.push record
+      if @history.length > @historyMaxLength
+        @history.shift()
+    bone.update() for bone in @bones
 
 module.exports = Body

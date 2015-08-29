@@ -2,7 +2,7 @@ Body = require './body'
 # Playback = require './playback'
 
 fx = {}
-fx.TestEffectDress   = require './effects/effect_dress'
+fx.Dress1            = require './effects/effect_dress'
 fx.TestEffectLines   = require './effects/effect_lines'
 fx.TestEffectPhysics = require './effects/effect_physics'
 fx.BodyExtrusion     = require './effects/effect_body_extrusion'
@@ -19,7 +19,7 @@ class App
 		@setupSkeleton()
 		@setupUI()
 		@setupDefaults()
-		
+
 		window.addEventListener 'focus', (=> @start()), false
 		window.addEventListener 'blur', (=> @stop()), false
 		window.addEventListener 'resize', (=> @windowResized()), false
@@ -30,18 +30,10 @@ class App
 		@scene = new THREE.Scene()
 		@camera = new THREE.PerspectiveCamera 60, ratio, 0.001, 500
 		@camera.position.z = -2
-		
-		# if window.WebGLRenderingContext
+		# setup renderer
 		@renderer = new THREE.WebGLRenderer antialias:true
-		# else
-		# 	@renderer = new THREE.CanvasRenderer
-		# @renderer.setClearColor 0x444444, 1
 		@renderer.setClearColor 0xffffff, 1
 		@renderer.setSize window.innerWidth, window.innerHeight
-		# @renderer.autoClear = false
-		# @renderer.gammaInput = true;
-		# @renderer.gammaOutput = true
-		# @renderer.shadowMapEnabled = true
 		@container.appendChild @renderer.domElement
 
 		window.setDarkTheme = =>
@@ -79,6 +71,9 @@ class App
 		$('#pause').change (ev) =>
 			@isPaused = ev.target.checked
 			@kinectProxy.togglePlay()
+		$('#loopback').change (ev) =>
+			isLoopingBack = ev.target.checked
+			@setLoopMode isLoopingBack
 		$('#debug').change (ev) =>
 			@setDebugMode ev.target.checked
 		$('#file').change (ev) =>
@@ -140,17 +135,18 @@ class App
 
 # Controls
 
+	setLoopMode : (loopMode) ->
+		@body.isLoopingBack = loopMode
+
 	setDebugMode : (@debug) ->
 		$lis = $('.gui li:not(.always_visible)')
-		if @debug 
+		if @debug
 			$(@ksview.canvas).appendTo($('body'))
 			$lis.show()
 		else
 			$(@ksview.canvas).remove()
 			$lis.hide()
 		@grid.visible = @debug
-		@ground.visible = !@debug
-		# @body.view.visible = @debug
 		@effect.setDebugMode @debug if @effect
 
 	setKSViewVisible : (bVisible) ->
@@ -163,6 +159,7 @@ class App
 		if @effect
 			@effect.stop()
 			@scene.remove @effect.view
+		console.log effectName
 		EffectClass = fx[effectName]
 		if EffectClass
 			@effect = new EffectClass @body, @scene
@@ -181,7 +178,7 @@ class App
 				@kinectProxy.framerate = 15
 				@ksview.proxy = @kinectProxy
 			@kinectProxy.play 'assets/kinect/' + endpoint + '.json.gz'
-		
+
 
 # System Events
 

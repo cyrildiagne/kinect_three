@@ -1,5 +1,5 @@
 class Edge
-  
+
   maxLength : 105
 
   constructor : (@joint) ->
@@ -29,13 +29,13 @@ class Edge
     v.z = @joint.z
     v.velocity = @joint.velocity.clone()
     verts.push v
-    
+
     @geometry.verticesNeedUpdate = true
 
 
 
 class Ribbon
-  
+
   maxLength : 100
 
   constructor : (@jts) ->
@@ -48,7 +48,7 @@ class Ribbon
         @geometry.vertices.push v
     for i in [0...Ribbon::maxLength-1]
       for j in [0...numJts-1]
-        @geometry.faces.push new THREE.Face3 i*numJts+j   , i*numJts+j+numJts, i*numJts+j+1        
+        @geometry.faces.push new THREE.Face3 i*numJts+j   , i*numJts+j+numJts, i*numJts+j+1
         @geometry.faces.push new THREE.Face3 i*numJts+j+1 , i*numJts+j+numJts, i*numJts+j+numJts+1
 
     @geometry.computeFaceNormals()
@@ -84,9 +84,9 @@ class Ribbon
     @geometry.computeFaceNormals()
     @geometry.computeVertexNormals true
 
-    
 
-class TestEffectDress
+
+class Dress1
 
   constructor : (@body, @scene) ->
     # setDarkTheme()
@@ -98,7 +98,7 @@ class TestEffectDress
     @setupRibbons()
 
   setupTestSphere : ->
-    material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 50 }  ) 
+    material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 50 }  )
     radius = 0.1
     geometry = new THREE.SphereGeometry radius, 10,10
     mesh = new THREE.Mesh geometry, material
@@ -179,4 +179,4 @@ class TestEffectDress
     r.update dt for r in @ribbons
 
 
-module.exports = TestEffectDress
+module.exports = Dress1

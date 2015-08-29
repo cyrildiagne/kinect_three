@@ -14,7 +14,7 @@ html(lang="en")
 
       ul.gui
         li.always_visible
-          input#debug(type='checkbox', checked='checked')
+          input#debug(type='checkbox')
           label(for='debug') debug
         li
           input#pause(type='checkbox')
@@ -22,10 +22,12 @@ html(lang="en")
         li
           label(for='file') playback
           select#file
+            option ws://127.0.0.1:9092
+            option(selected) ws://192.168.0.100:9092
             option dance
             option dance_simple
             option hand_flap
-            option(selected) jump_crouch
+            option jump_crouch
             option naenae
         li
           label(for='effect') effect
@@ -37,7 +39,7 @@ html(lang="en")
             option BodyExtrusion
             option InertiaLines
         li
-          input#ksvisible(type='checkbox')
+          input#ksvisible(type='checkbox', checked='checked')
           label(for='ksvisible') ks debug
 
       //- each lib in libs

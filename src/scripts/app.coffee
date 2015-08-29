@@ -26,8 +26,9 @@ class App
 		window.addEventListener 'keydown', @onKeyDown, false
 
 	setupThreejs : ->
+		ratio = window.innerWidth / window.innerHeight
 		@scene = new THREE.Scene()
-		@camera = new THREE.PerspectiveCamera 60, window.innerWidth / window.innerHeight, 0.001, 500
+		@camera = new THREE.PerspectiveCamera 60, ratio, 0.001, 500
 		@camera.position.z = -2
 		
 		# if window.WebGLRenderingContext
@@ -45,7 +46,7 @@ class App
 
 		window.setDarkTheme = =>
 			$('body').removeClass('light').addClass('dark')
-			@renderer.setClearColor 0x555555, 1
+			@renderer.setClearColor 0x404040, 1
 
 		@controls = new THREE.OrbitControls @camera, @renderer.domElement
 
@@ -53,21 +54,24 @@ class App
 		@grid.position.y -= 0.8
 		@scene.add @grid
 
-	setupSkeleton : ->
+		# add ground
+		plane = new THREE.PlaneBufferGeometry(50, 50)
+		mat = new THREE.MeshBasicMaterial( { color: 0x505050 } )
+		@ground = new THREE.Mesh(plane, mat)
+		@ground.rotation.x = -Math.PI / 2
+		@ground.position.y -= 1
+		@scene.add @ground
 
+	setupSkeleton : ->
 		@tracker = new ks.Tracker
 		@tracker.addListener 'user_in',  @onKinectUserIn
 		@tracker.addListener 'user_out', @onKinectUserOut
-
-		#@kinectProxy = new ks.Playback @tracker
-		@kinectProxy = new ks.SocketStream @tracker
-
+		# setup debug view
 		@ksview = new ks.DebugView @tracker
-		@ksview.proxy = @kinectProxy
 		@ksview.canvas.style.position = 'absolute'
 		@ksview.canvas.style.right = '0'
 		@ksview.canvas.style.bottom = '-30px'
-
+		# setup body
 		@body = new Body()
 		@scene.add @body.view
 
@@ -144,7 +148,9 @@ class App
 		else
 			$(@ksview.canvas).remove()
 			$lis.hide()
-		@body.view.visible = @debug
+		@grid.visible = @debug
+		@ground.visible = !@debug
+		# @body.view.visible = @debug
 		@effect.setDebugMode @debug if @effect
 
 	setKSViewVisible : (bVisible) ->
@@ -162,12 +168,19 @@ class App
 			@effect = new EffectClass @body, @scene
 			@scene.add @effect.view
 
-	setPlaybackFile : (fileName) ->
-		# @kinectProxy.framerate = 15
-		if @kinectProxy.connect
-			@kinectProxy.connect "ws://127.0.0.1:9092"
+	setPlaybackFile : (endpoint) ->
+		if endpoint.indexOf("ws://") != -1
+			@kinectProxy.stop() if @kinectProxy
+			if !@kinectProxy or !@kinectProxy.connect
+				@kinectProxy = new ks.SocketStream @tracker
+				@ksview.proxy = @kinectProxy
+			@kinectProxy.connect endpoint
 		else
-			@kinectProxy.play 'assets/kinect/' + fileName + '.json.gz'
+			if !@kinectProxy or @kinectProxy.connect
+				@kinectProxy = new ks.Playback @tracker
+				@kinectProxy.framerate = 15
+				@ksview.proxy = @kinectProxy
+			@kinectProxy.play 'assets/kinect/' + endpoint + '.json.gz'
 		
 
 # System Events

@@ -1,7 +1,7 @@
 class Joint
 
-  geometry : new THREE.SphereGeometry 0.011
-  material : new THREE.MeshBasicMaterial color: 0x00ff00
+  geometry : new THREE.SphereGeometry 0.008
+  material : new THREE.MeshBasicMaterial color: 0x0
 
   constructor : (@id, @joint) ->
     @view = new THREE.Mesh Joint::geometry, Joint::material
@@ -22,7 +22,7 @@ class Joint
 
 class Bone
 
-  material : new THREE.LineBasicMaterial(color: 0x0000ff, linewidth:5)
+  material : new THREE.LineBasicMaterial(color: 0x0, linewidth:3)
 
   constructor : (@name, @j1, @j2) ->
     @geometry = new THREE.Geometry()

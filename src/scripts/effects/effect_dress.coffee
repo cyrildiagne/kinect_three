@@ -9,7 +9,7 @@ class Edge
       v = new THREE.Vector3 0,0,0
       v.velocity = new THREE.Vector3
       @geometry.vertices.push v
-    @material = new THREE.LineBasicMaterial(color: 0x222222, linewidth:8, linecap:'round')
+    @material = new THREE.LineBasicMaterial(color: 0x222222, linewidth:3, linecap:'round')
     @view = new THREE.Line @geometry, @material
     setDarkTheme();
 

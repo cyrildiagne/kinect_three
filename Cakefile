@@ -89,6 +89,7 @@ task 'dev', 'start dev env', ->
   watch jade_path, render
   watch coff_path, -> compile link
   compile link
+  render path.join(jade_path, 'index.jade')
   launch 'http-server', [bin_path, '-s']
 
 task 'clean', 'clean builds', ->

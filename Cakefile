@@ -36,12 +36,14 @@ apps_path     = path.join 'node_modules','.bin'
 
 launch = (cmd, options) ->
   cmd = path.join apps_path, cmd
+  cmd += '.cmd'
   prcss = spawn cmd, options
   prcss.stdout.pipe process.stdout
   prcss.stderr.pipe process.stderr
 
 run = (cmd, options, callback) ->
   cmd = path.join apps_path, cmd
+  cmd += '.cmd'
   opts = ' ' + options.join ' '
   prcss = exec cmd + opts, (error) -> 
     if error then console.log error
@@ -53,6 +55,7 @@ watch = (path, callback) ->
 
 render = (file) ->
   console.log 'rendering.. '
+  file = file || 'src/templates/index.jade'
   name = path.basename(file).split('.')[0]
   try
     libs = fs.readdirSync(libs_path).filter (file) -> file != '.DS_Store'
@@ -94,7 +97,7 @@ task 'dev', 'start dev env', ->
 task 'clean', 'clean builds', ->
   fs.removeSync build_path
 
-task 'build',  'build lib', -> compile link
+task 'build',  'build lib', -> compile -> link -> render()
 
 task 'test', 'run tests', ->
   launch 'mocha', ['--compilers', 'coffee:coffee-script/register']
